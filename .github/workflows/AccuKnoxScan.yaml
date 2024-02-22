@@ -22,6 +22,7 @@ jobs:
           repository_name: "udit-uniyal/vulnerable-to-test"
           tenant_id: "1069"
           severity: "HIGH"
+          code: "1"
 
 
          
