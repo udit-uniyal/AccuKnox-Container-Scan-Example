@@ -20,7 +20,7 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
           tenant_id: ${{ secrets.TENANT_ID }}
-          repository_name: "udit-uniyal/accuKnox-container-scan-example"
+          repository_name: "udit-uniyal/accuknox-container-scan-example"
           severity: "HIGH"
 
 
