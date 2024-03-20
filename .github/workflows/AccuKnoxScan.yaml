@@ -22,6 +22,6 @@ jobs:
           tenant_id: ${{ secrets.TENANT_ID }}
           repository_name: "udit-uniyal/accuknox-container-scan-example"
           severity: "HIGH"
-
+          exit_code: "1"
 
          
