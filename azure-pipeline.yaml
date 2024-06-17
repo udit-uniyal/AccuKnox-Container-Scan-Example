@@ -24,7 +24,7 @@ jobs:
   - job: accuknox_cicd
     displayName: AccuKnox CI/CD
     pool:
-      vmImage: 'ubuntu-latest'
+      name: 'ubuntu'
 
     steps:
       - checkout: self
