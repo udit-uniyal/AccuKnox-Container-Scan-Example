@@ -1,0 +1,65 @@
+name: AccuKnox Scan Workflow
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+jobs:
+  - job: accuknox_cicd
+    displayName: AccuKnox CI/CD
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - checkout: self
+      
+      - script: |
+          echo "Validating Inputs"
+          curl -o validate_inputs.py https://raw.githubusercontent.com/accuknox/container-scan-action/main/validate_inputs.py
+          python validate_inputs.py
+        displayName: 'Validate Inputs'
+        env:
+          DOCKERFILE_CONTEXT: $(dockerfile_context)
+          ENDPOINT: $(endpoint)
+          TOKEN: $(token)
+          TENANT_ID: $(tenant_id)
+          REPOSITORY_NAME: $(repository_name)
+          TAG: $(tag)
+          SEVERITY: $(severity)
+          CODE: $(exit_code)
+
+      - script: |
+          echo "Building Docker Image"
+          docker build -t $(repository_name):$(tag) -f $(DOCKERFILE_CONTEXT) .
+        displayName: 'Docker Build'
+      
+      - script: |
+          echo "Downloading Vulnerability Scanner"
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
+        displayName: 'Download Vulnerability Scanner'
+      
+      - script: |
+          echo "Running AccuKnox Vulnerability Scanner"
+          trivy image --severity $(severity) -f json $(repository_name):$(tag) -o results.json --quiet 
+        displayName: 'Run AccuKnox Vulnerability Scanner'
+      
+      - script: |
+          echo "Printing AccuKnox Results"
+          cat results.json
+        displayName: 'Print AccuKnox Results'
+
+      - script: |
+          echo "Pushing Report to CSPM Panel"
+          curl --location --request POST 'https://$(endpoint)/api/v1/artifact/?tenant_id=$(tenant_id)&data_type=TR&save_to_s3=false' --header 'Tenant-Id: $(tenant_id)' --header 'Authorization: Bearer $(token)' --form 'file=@"./results.json"'
+        displayName: 'Push Report to CSPM Panel'
+
+      - script: |
+          echo "Running AccuKnox Vulnerability Scanner with Specific Tags"
+          trivy image --exit-code $(exit_code) --severity $(severity) $(repository_name):$(tag) --quiet >/dev/null
+        displayName: 'Run AccuKnox Vulnerability Scanner with Specific Tags'
