@@ -10,6 +10,16 @@ pr:
     include:
       - main
 
+variables:
+  dockerfile_context: 'Dockerfile'
+  endpoint: 'cspm.dev.accuknox.com'
+  token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxMjEzNjc3LCJqdGkiOiIxMTdlM2VhNmQxZjA0ZmFkYjFiNDQ2ZWNhZGVlY2MzNCIsImlzcyI6ImNzcG0uZGVtby5hY2N1a25veC5jb20ifQ.IZ1TY2mEWSaCXwDp6XTVffTdJ6GvYMfTO5iseQ8sjrd2olXWbcptSYGeRDHPkF9ufW5hVkuwLAT6Q0AsmgzHmwUzLa-0ILuo0XrN8MFPPC4J1Ao8_2v28GsCGTM8vUFkemesSdJh1Q40FGDxHD4TNNo7YRTZwpOMx36TSod4H1Bxb0xqtOYbeYW7xkB8rrHQ11snx4c7q-Emjzaq3yMvhcMS4X5-OurTQvDzNEQeo-eoz07gV4FNA8ipQgM275IMt-M5CmaSAPuvUVWCsQ1227bs-6S8bDHBOKL1HHYHJADVibbgCY8tOz6IhpabrIGK8CTfuRIWHhW-M4GhvkwiTw'
+  tenant_id: '167'
+  repository_name: 'udit-uniyal/accuknox-container-scan-example'
+  tag: 'latest'
+  severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+  exit_code: '0'
+
 jobs:
   - job: accuknox_cicd
     displayName: AccuKnox CI/CD
