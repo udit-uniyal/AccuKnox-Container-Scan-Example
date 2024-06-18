@@ -49,14 +49,14 @@ jobs:
           docker build -t $(repository_name):$(tag) -f $(DOCKERFILE_CONTEXT) .
         displayName: 'Docker Build'
       
-      - script: |
-          echo "Downloading Vulnerability Scanner"
-          sudo curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
-        displayName: 'Download Vulnerability Scanner'
+      # - script: |
+      #     echo "Downloading Vulnerability Scanner"
+      #     curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
+      #   displayName: 'Download Vulnerability Scanner'
       
       - script: |
           echo "Running AccuKnox Vulnerability Scanner"
-          sudo trivy image --severity $(severity) -f json $(repository_name):$(tag) -o results.json --quiet 
+          trivy image --severity $(severity) -f json $(repository_name):$(tag) -o results.json --quiet 
         displayName: 'Run AccuKnox Vulnerability Scanner'
       
       - script: |
