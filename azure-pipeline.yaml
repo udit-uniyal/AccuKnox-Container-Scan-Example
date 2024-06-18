@@ -51,12 +51,12 @@ jobs:
       
       - script: |
           echo "Downloading Vulnerability Scanner"
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
+          sudo curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
         displayName: 'Download Vulnerability Scanner'
       
       - script: |
           echo "Running AccuKnox Vulnerability Scanner"
-          trivy image --severity $(severity) -f json $(repository_name):$(tag) -o results.json --quiet 
+          sudo trivy image --severity $(severity) -f json $(repository_name):$(tag) -o results.json --quiet 
         displayName: 'Run AccuKnox Vulnerability Scanner'
       
       - script: |
