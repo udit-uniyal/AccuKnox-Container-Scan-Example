@@ -82,8 +82,7 @@ runs:
         --form 'file=@"./results.json"')
 
         echo "Response: $response"
-
-        if [ $? -ne 0 ]; then
+        if [[ "$response" != *"File received successfully"* ]]; then
           echo "Error: Failed to push report to CSPM panel"
           exit 1
         fi
