@@ -18,9 +18,11 @@ jobs:
       - name: Run AccuKnox CSPM Scan
         uses: ./
         with:
-          token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxODg0OTM3OTY5LCJqdGkiOiI0MDc3YWI5MTdlNTQ0NGEwYTFmNmExZTYzYWM5ZGVjYyIsImlzcyI6ImNzcG0uc3RhZ2UuYWNjdWtub3guY29tIn0.RUAFGIfS8NhZ83SZ-Rkw07-BIdXWpRjAbqTLzJvYz8Z-cjxJ4uUvH-h3-xGMpQ26a_tA8h1AvzM60L2pS338QA0CRVZrH0WTtNNagb2eNJdnYOH6YW7sdDAWE78SroRS8nKZFGyvGAILz7iDyNcf_rXybAhTCN-zjIjv1Hy73dECO0KCgx9j6_hB7Eyhqdm8_RmJZStL9sSyyywNLyUDMMsP35ah42ARdiF2OB3_fQIwrIRS9ICoAtCqRW6sTh4ctzfdv4PPJFsOeuxzl3pEpVPnwj7yR9QZojD5LjiZujK6k8WhVKZRQMPtCJ9HKm_igIDC4qGh0Yqi9qV35MEe8g
-          tenant_id: 508
+          token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5OTU0MzcwLCJqdGkiOiI0OTBmMWRjODc5YjE0OWRmOWQ4ZTBhMmY3NWZmY2M0MiIsImlzcyI6ImNzcG0uZGVtby5hY2N1a25veC5jb20ifQ.cv43WWZtqJIXrXN0mrK5cfUUeEYYSbJwRXvjW5FfjhuK9yOvIiFYzObMEBF3_kgJG8NOfWQEf9O3C5X0-_JTvzevl9HsQTwjKwPzKX9fshhhUww999dZjj5o1eQkV-kqyrL2nVRZ50UF8sbBGVDkMGbjcZY8goQV2RydyDqxYaNYaWROckgO8ieAPOXw2JF0ISubrpN2HsaJtKDaB25e1mzp0nq0USI5a8x9Ec0Ic0CbPrihlwWeeDtS30zCOIRTRFQcFT4k1ftOy0xAFU0Qbh0gWGRKhFgrUTrRur85CF5HXmx7DjEqCkYFiFvCIGhyKvhrTJw9WRm2S8lz9y2kcA
+          tenant_id: 167
           repository_name: "udit-uniyal/accuknox-container-scan-example"
-          endpoint: cspm.stage.accuknox.com
+          endpoint: cspm.demo.accuknox.com
+          label: trivy
+
           # severity: "HIGH"
           # exit_code: "1"
