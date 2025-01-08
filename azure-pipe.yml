@@ -1,14 +1,15 @@
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
-- task: AccuKnox-container-scan@0
-  inputs:
-    dockerfile: $(dockerfile)
-    accuknoxEndpoint: $(accuknoxEndpoint)
-    accuknoxTenantId: $(accuknoxTenantId)
-    accuknoxToken: $(accuknoxToken)
-    accuknoxLabel: $(accuknoxLabel)
-    qualityGate: $(qualityGate)
+steps:
+  - task: AccuKnox-container-scan@0
+    inputs:
+      dockerfile: $(dockerfile)
+      accuknoxEndpoint: $(accuknoxEndpoint)
+      accuknoxTenantId: $(accuknoxTenantId)
+      accuknoxToken: $(accuknoxToken)
+      accuknoxLabel: $(accuknoxLabel)
+      qualityGate: $(qualityGate)
