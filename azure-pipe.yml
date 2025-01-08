@@ -8,7 +8,7 @@ steps:
   - task: AccuKnox-container-scan@0
     inputs:
       dockerfile: $(dockerfile)
-      imageName: ${imageName)
+      imageName: $(imageName)
       accuknoxEndpoint: $(accuknoxEndpoint)
       accuknoxTenantId: $(accuknoxTenantId)
       accuknoxToken: $(accuknoxToken)
