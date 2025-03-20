@@ -25,6 +25,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           tenant_id: ${{ secrets.TENANT_ID }}
           endpoint: cspm.demo.accuknox.com
-          image: udit-uniyal/accuknox-container-scan-example:${{ github.sha }}
+          image: udit-uniyal/accuknox-container-scan-example
+          tag: ${{ github.sha }}
           label: trivy
           severity: HIGH
