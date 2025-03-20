@@ -75,7 +75,7 @@ runs:
     - name: Check for Specified Severity Vulnerabilities
       if: "${{ inputs.severity }} != ''"
       run: |
-        if jq -e '.Results[].Vulnerabilities | select(. != null) | .[] | select(.Severity | IN(${SEVERITY//,/","}))' results.json > /dev/null; then
+        if jq -e --argjson severities "[${SEVERITY//,/\",\"}]" '.Results[].Vulnerabilities? | select(. != null) | .[] | select(.Severity | IN($severities[]))' results.json > /dev/null; then
           echo "[ERROR] Vulnerabilities with the specified severity found. Failing the pipeline."
           exit 1
         fi
