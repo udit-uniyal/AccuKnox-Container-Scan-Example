@@ -13,11 +13,11 @@ inputs:
   tenant_id:
     description: "The ID of the tenant associated with the CSPM panel."
     required: true
-  repository_name:
-    description: "Docker image repository name"
+  image:
+    description: "image name"
     required: true
   tag:
-    description: "Add version tag to the repository"
+    description: "Add version tag to the image name"
     required: true
     default: "${{ github.run_id }}"
   severity:
@@ -48,7 +48,7 @@ runs:
         ENDPOINT: ${{ inputs.endpoint }}
         TOKEN: ${{ inputs.token }}
         TENANT_ID: ${{ inputs.tenant_id }}
-        REPOSITORY_NAME: ${{ inputs.repository_name }}
+        image: ${{ inputs.image }}
         TAG: ${{ inputs.tag }}
         SEVERITY: ${{ inputs.severity }}
         CODE: ${{ inputs.exit_code }}
@@ -61,7 +61,7 @@ runs:
 
     - name: Run AccuKnox Vulnerability Scanner
       run: |
-        trivy image -f json -o results.json --quiet ${{ inputs.repository_name }}:${{ inputs.tag }}
+        trivy image -f json -o results.json --quiet ${{ inputs.image }}:${{ inputs.tag }}
       shell: bash
 
     - name: Push report to CSPM panel
