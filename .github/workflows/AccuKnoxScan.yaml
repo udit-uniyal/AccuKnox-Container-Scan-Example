@@ -15,14 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@main
 
+      - name: docker image build
+        run: |
+          docker build -t udit-uniyal/accuknox-container-scan-example:${{ github.sha }} . 
+          
       - name: Run AccuKnox CSPM Scan
         uses: ./
         with:
           token: ${{ secrets.TOKEN }}
           tenant_id: ${{ secrets.TENANT_ID }}
-          repository_name: "udit-uniyal/accuknox-container-scan-example"
           endpoint: cspm.demo.accuknox.com
           label: trivy
-
-          # severity: "HIGH"
-          # exit_code: "1"
+          severity: HIGH
