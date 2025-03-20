@@ -1,11 +1,8 @@
 name: AccuKnox Container Scan
+
 description: Scan Docker images using AccuKnox and push the results to the CSPM panel.
 
 inputs:
-  dockerfile_context:
-    description: "The context of the Dockerfile to use for building the image."
-    required: true
-    default: "Dockerfile"
   endpoint:
     description: "The URL of the CSPM panel to push the scan results to."
     required: true
@@ -31,8 +28,12 @@ inputs:
     description: "Values '0' and '1' are accepted. '0' is the default value, which indicates that the pipeline will not be halted if the specified severity is found, while '1' indicates that the pipeline will stop if a specified severity level is detected."
     required: false
     default: "0"
+  ignore_unfixed:
+    description: "Ignore vulnerabilities for which a fix isn't available yet."
+    required: false
+    default: false
   label:
-    Description: "The label is required to push the findings to a specific label created in AccuKnox SaaS."
+    description: "The label created in AccuKnox SaaS for associating scan results."
     required: true
 
 runs:
@@ -44,7 +45,6 @@ runs:
         python validate_inputs.py
       shell: bash
       env:
-        DOCKERFILE_CONTEXT: ${{ inputs.dockerfile_context }}
         ENDPOINT: ${{ inputs.endpoint }}
         TOKEN: ${{ inputs.token }}
         TENANT_ID: ${{ inputs.tenant_id }}
@@ -52,48 +52,36 @@ runs:
         TAG: ${{ inputs.tag }}
         SEVERITY: ${{ inputs.severity }}
         CODE: ${{ inputs.exit_code }}
-    - name: Docker Build
-      run: |
-        docker build -t ${{ inputs.repository_name }}:${{ inputs.tag }} -f ${{ inputs.DOCKERFILE_CONTEXT }} .
-      shell: bash
+        IGNORE_UNFIXED: ${{ inputs.ignore_unfixed }}
 
     - name: Download Vulnerability Scanner
       run: |
-        curl -sfL $url | sh -s -- -b /usr/local/bin > /dev/null
-      env:
-        url: https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
       shell: bash
 
     - name: Run AccuKnox Vulnerability Scanner
       run: |
-        $Scan image --severity ${{ inputs.severity }} -f json ${{ inputs.repository_name }}:${{ inputs.tag }} -o results.json --quiet
-      env:
-        Scan: trivy
+        trivy image -f json -o results.json --quiet ${{ inputs.repository_name }}:${{ inputs.tag }}
       shell: bash
 
-    - name: Print AccuKnox Results
-      run: cat results.json
-      shell: bash
     - name: Push report to CSPM panel
       run: |
-        response=$(curl --location --request POST 'https://${{ inputs.endpoint }}/api/v1/artifact/?tenant_id=${{ inputs.tenant_id }}&data_type=TR&label_id=${{ inputs.label }}&save_to_s3=false' \
-          --header 'Tenant-Id: ${{ inputs.tenant_id }}' \
-          --header 'Authorization: Bearer ${{ inputs.token }}' \
-        --form 'file=@"./results.json"')
+        curl --location --request POST "https://${{ inputs.endpoint }}/api/v1/artifact/?tenant_id=${{ inputs.tenant_id }}&data_type=TR&label_id=${{ inputs.label }}&save_to_s3=true" \
+        --header "Tenant-Id: ${{ inputs.tenant_id }}" \
+        --header "Authorization: Bearer ${{ inputs.token }}" \
+        --form 'file=@"results.json"'
+      shell: bash
 
-        echo "Response: $response"
-        if [[ "$response" != *"File received successfully"* ]]; then
-          echo "Error: Failed to push report to CSPM panel"
+    - name: Check for Specified Severity Vulnerabilities
+      if: "${{ inputs.severity }} != ''"
+      run: |
+        if jq -e '.Results[].Vulnerabilities | select(. != null) | .[] | select(.Severity | IN(${SEVERITY//,/","}))' results.json > /dev/null; then
+          echo "[ERROR] Vulnerabilities with the specified severity found. Failing the pipeline."
           exit 1
         fi
       shell: bash
-
-    - name: Run AccuKnox Vulnerability Scanner with specific tags
-      run: |
-        $Scan image --exit-code ${{ inputs.exit_code }} --severity ${{ inputs.severity }} ${{ inputs.repository_name }}:${{ inputs.tag }} --quiet >/dev/null
       env:
-        Scan: trivy
-      shell: bash
+        SEVERITY: ${{ inputs.severity }}
 
 branding:
   icon: "shield"
