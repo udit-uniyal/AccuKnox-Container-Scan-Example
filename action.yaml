@@ -23,7 +23,6 @@ inputs:
   severity:
     description: "Allows selection of severity level for the scan. Options include UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL. If specified, the scan will target vulnerabilities of the selected severity level."
     required: false
-    default: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
   exit_code:
     description: "Values '0' and '1' are accepted. '0' is the default value, which indicates that the pipeline will not be halted if the specified severity is found, while '1' indicates that the pipeline will stop if a specified severity level is detected."
     required: false
@@ -73,6 +72,7 @@ runs:
       shell: bash
 
     - name: Check for specified severity vulnerabilities
+      if: ${{ inputs.severity != '' }}
       run: |
         SEVERITIES=$(echo "${{ inputs.severity }}" | tr ',' '|')  # Convert to grep pattern
         if grep -E "\"Severity\":\s*\"($SEVERITIES)\"" results.json; then
