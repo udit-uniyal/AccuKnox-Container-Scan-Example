@@ -72,10 +72,11 @@ runs:
         --form 'file=@"results.json"'
       shell: bash
 
-    - name: Check for critical vulnerabilities using grep
+    - name: Check for specified severity vulnerabilities
       run: |
-        if grep -q "CRITICAL" results.json; then
-          echo "AccuKnox Scan has halted the deployment because it detected critical vulnerabilities"
+        SEVERITIES=$(echo "${{ inputs.severity }}" | tr ',' '|')  # Convert to grep pattern
+        if grep -E "\"Severity\":\s*\"($SEVERITIES)\"" results.json; then
+          echo "AccuKnox Scan has halted the deployment due to detected vulnerabilities in severity levels: ${{ inputs.severity }}"
           exit 1
         else
           exit 0
