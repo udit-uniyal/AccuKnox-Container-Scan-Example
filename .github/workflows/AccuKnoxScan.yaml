@@ -28,4 +28,3 @@ jobs:
           image: udit-uniyal/accuknox-container-scan-example
           tag: ${{ github.sha }}
           label: trivy
-          severity: LOW, HIGH
