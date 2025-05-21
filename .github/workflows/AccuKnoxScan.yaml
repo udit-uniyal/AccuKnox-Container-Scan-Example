@@ -20,7 +20,7 @@ jobs:
           docker build -t udit-uniyal/accuknox-container-scan-example:${{ github.sha }} . 
 
       - name: Run AccuKnox Container Scanner
-        uses: accuknox/container-scan-action@v1.0.0
+        uses: accuknox/container-scan-action@1.0.0
         with:
           endpoint: ${{ secrets.ACCUKNOX_ENDPOINT }}
           token: ${{ secrets.ACCUKNOX_DEV_TOKEN }}
