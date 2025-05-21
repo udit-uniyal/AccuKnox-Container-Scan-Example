@@ -18,13 +18,14 @@ jobs:
       - name: docker image build
         run: |
           docker build -t udit-uniyal/accuknox-container-scan-example:${{ github.sha }} . 
-          
-      - name: Run AccuKnox CSPM Scan
-        uses: ./
+
+      - name: Run AccuKnox Container Scanner
+        uses: accuknox/container-scan-action@v1.0.0
         with:
-          token: ${{ secrets.TOKEN }}
+          endpoint: ${{ secrets.ACCUKNOX_ENDPOINT }}
+          token: ${{ secrets.ACCUKNOX_DEV_TOKEN }}
           tenant_id: ${{ secrets.TENANT_ID }}
-          endpoint: cspm.demo.accuknox.com
-          image: udit-uniyal/accuknox-container-scan-example
-          tag: ${{ github.sha }}
-          label: trivy
+          image: "accuknox-container-scan-example"
+          tag: ${{github.sha }}
+          severity: "HIGH,CRITICAL"
+          label: "container-release-scan"
